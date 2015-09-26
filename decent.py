@@ -21,6 +21,18 @@ def decent(f,g,step,guess,thresh):
 #g = lambda x: np.array([2*(x[0]-5),2*(x[1]+3)]);
 #print decent(f,g,0.01, np.array([-100,50]), 0.00001)
 
+'''
+#Multi minima
+f = lambda x: (x**2 + 3*x + 2)**2;
+g = lambda x: 2*(2*x + 3)*(x**2 + 3*x + 2);
+print decent(f,g,0.01, -1.5, 0.00001)
+print decent(f,g,0.01, 2, 0.00001)
+print decent(f,g,0.01, -3, 0.00001)
+#print decent(f,g,0.01, -100, 0.00001) #crashes because unstable
+print decent(f,g,0.0001, -10, 0.00001)
+'''
+
+
 
 '''
 def gaussian(x, mu, sig):
