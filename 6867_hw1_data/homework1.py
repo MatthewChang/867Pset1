@@ -2,6 +2,7 @@ import pdb
 import random
 import pylab as pl
 import numpy as np
+from numpy import genfromtxt
 from scipy.optimize import fmin_bfgs
 from Descent import *
 
@@ -67,11 +68,25 @@ def regressTrainData():
 def regressValidateData():
     return getData('regress_validate.txt')
 
-X , Y = bishopCurveData();
+def regressTestData():
+    return getData('regress_test.txt')
+
+def regressBlogTestData():
+    return (genfromtxt('BlogFeedback_data/x_test.csv'), genfromtxt('BlogFeedback_data/y_test.csv'))
+
+def regressBlogValData():
+    return (genfromtxt('BlogFeedback_data/x_val.csv'), genfromtxt('BlogFeedback_data/y_val.csv'))
+
+def regressBlogTrainData():
+    return (genfromtxt('BlogFeedback_data/x_train.csv'), genfromtxt('BlogFeedback_data/y_train.csv'))
+
+#X , Y = bishopCurveData();
 #regressionPlot(X,Y,2);
 
+'''
 order = 3;
 f = lambda w:SSE(X,Y,order,w);
 #g = lambda w: num_gradient(f,w,0.001);
 g = lambda w: SSEDer(X,Y,order,w);
 print decent(f,g,0.001,np.matrix([0,10,-20,20]).T,0.000001);
+'''
