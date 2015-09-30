@@ -4,7 +4,7 @@ import pylab as pl
 import numpy as np
 from numpy import genfromtxt
 from scipy.optimize import fmin_bfgs
-from Descent import *
+from Descent import decent, num_gradient
 
 # X is an array of N data points (one dimensional for now), that is, Nx1
 # Y is a Nx1 column vector of data values
@@ -49,7 +49,61 @@ def regressionPlot(X, Y, order):
     A=  np.matrix(pts)
     Yp = pl.dot(w.T, designMatrix(A, order).T)
     pl.plot(pts, Yp.tolist()[0])
-    #pl.show()
+
+def regressionPlotDescent(X, Y, order, guess):
+    pl.plot(X.T.tolist()[0],Y.T.tolist()[0], 'gs')
+
+    # You will need to write the designMatrix and regressionFit function
+
+    # constuct the design matrix (Bishop 3.16), the 0th column is just 1s.
+    phi = designMatrix(X, order)
+    # compute the weight vector
+    wo = regressionFit(X, Y, phi)
+    print 'optimal w', wo
+    f = lambda w:SSE(X,Y,order,w);
+    g = lambda w: np.matrix(num_gradient(f,w,0.001)).T;
+    w = decent(f,g,0.01,guess,0.0001);
+
+    print 'descent w', w
+
+    print SSE(X,Y,order,w);
+    #print SSEDer(X,Y,order,w);
+    #print num_gradient(lambda w: SSE(X,Y,order,w),w,0.001);
+    
+    # produce a plot of the values of the function 
+    pts = [[p] for p in pl.linspace(min(X), max(X), 100)]
+    A=  np.matrix(pts)
+    Yp = pl.dot(w.T, designMatrix(A, order).T)
+    pl.plot(pts, Yp.tolist()[0])
+
+def regressionPlotDescentBuiltin(X, Y, order, guess):
+    pl.plot(X.T.tolist()[0],Y.T.tolist()[0], 'gs')
+
+    # You will need to write the designMatrix and regressionFit function
+
+    # constuct the design matrix (Bishop 3.16), the 0th column is just 1s.
+    phi = designMatrix(X, order)
+    # compute the weight vector
+    wo = regressionFit(X, Y, phi)
+    print 'optimal w', wo
+    def f(w):
+        #print np.matrix(w).T
+        return SSE(X,Y,order,np.matrix(w).T)
+    w = fmin_bfgs(f,guess);
+    w = np.matrix(w).T
+
+    print 'descent w', w
+
+    print SSE(X,Y,order,w);
+    #print SSEDer(X,Y,order,w);
+    #print num_gradient(lambda w: SSE(X,Y,order,w),w,0.001);
+    
+    # produce a plot of the values of the function 
+    pts = [[p] for p in pl.linspace(min(X), max(X), 100)]
+    A=  np.matrix(pts)
+    Yp = pl.dot(w.T, designMatrix(A, order).T)
+    pl.plot(pts, Yp.tolist()[0])
+   
 
 def getData(name):
     data = pl.loadtxt(name)
@@ -80,13 +134,29 @@ def regressBlogValData():
 def regressBlogTrainData():
     return (genfromtxt('BlogFeedback_data/x_train.csv'), genfromtxt('BlogFeedback_data/y_train.csv'))
 
-#X , Y = bishopCurveData();
-#regressionPlot(X,Y,2);
+X , Y = bishopCurveData();
+##regressionPlot(X,Y,0);
+##regressionPlot(X,Y,1);
+##regressionPlot(X,Y,3);
+##regressionPlot(X,Y,9);
+##pl.show()
 
-'''
-order = 3;
-f = lambda w:SSE(X,Y,order,w);
-#g = lambda w: num_gradient(f,w,0.001);
-g = lambda w: SSEDer(X,Y,order,w);
-print decent(f,g,0.001,np.matrix([0,10,-20,20]).T,0.000001);
-'''
+regressionPlotDescent(X,Y,0,np.matrix([1]*1).T);
+regressionPlotDescent(X,Y,1,np.matrix([1]*2).T);
+regressionPlotDescent(X,Y,3,np.matrix([0]*4).T);
+regressionPlotDescent(X,Y,9,np.matrix([1]*10).T);
+
+##regressionPlotDescentBuiltin(X,Y,0,np.matrix([1]*1).T);
+##regressionPlotDescentBuiltin(X,Y,1,np.matrix([1]*2).T);
+##regressionPlotDescentBuiltin(X,Y,3,np.matrix([0]*4).T);
+##regressionPlotDescentBuiltin(X,Y,9,np.matrix([1]*10).T);
+pl.show();
+
+
+##order = 1;
+##f = lambda w:SSE(X,Y,order,w);
+##g = lambda w: SSEDer(X,Y,order,w);
+##w = np.matrix([100,10]).T
+###print np.linalg.norm(g(w) - np.matrix(num_gradient(f,w,0.01)).T,2);
+##print decent(f,g,0.001,np.matrix([0,1]).T,0.000001);
+

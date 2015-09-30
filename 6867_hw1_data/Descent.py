@@ -1,13 +1,27 @@
 import numpy as np;
 import math;
+from scipy.optimize import minimize, rosen, rosen_der
 
 def decent(f,g,step,guess,thresh):
     x = guess;
     previous = None;
+    #print x
     while(previous == None or abs(f(previous)-f(x)) > thresh):
         previous = x;
+        #print x
+        #print g(x)
         x = x - step*g(x);
     return x;
+
+def decent_i(f,g,step,guess,thresh):
+    x = guess;
+    previous = None;
+    iterations = 0
+    while(previous == None or abs(f(previous)-f(x)) > thresh):
+        iterations += 1
+        previous = x;
+        x = x - step*g(x);
+    return (x,iterations);
 
 def num_gradient(f,x,step):
     x = x.astype('float64');
@@ -22,19 +36,23 @@ def num_gradient(f,x,step):
 
 ##f = lambda x: x**2;
 ##g = lambda x: 2*x;
-##print decent(f,g,0.01, 100, 0.001)
+##print decent(f,g,0.01, 100, 0.000001)
 ##print g(5)
-##print num_gradient(f,np.array([5.0]),0.0001);
+##print g(5), num_gradient(f,np.array([5.0]),0.01);
+
 
 ##f = lambda x: x[0]*x[1];
 ##g = lambda x: np.array([x[1],x[0]]);
-##print decent(f,g,0.01, np.array([-100,50]), 0.001)
-##print g(np.array([-100,50])), num_gradient(f,np.array([-100.0,50.0]),0.00001);
-
+##print decent(f,g,0.01, np.array([0.00001,0.00001]), 0.001)
+##print decent(f,g,0.01, np.array([50,50]), 0.1)
+##print decent(f,g,0.01, np.array([50,50]), 0.001)
+##print g(np.array([-100,50])), num_gradient(f,np.array([-100.0,50.0]),0.01);
+##print g(np.array([0,0])), num_gradient(f,np.array([0,0]),0.01);
+##
 ##f = lambda x: (x[0]-5)**2+(x[1]+3)**2;
 ##g = lambda x: np.array([2*(x[0]-5),2*(x[1]+3)]);
 ##print decent(f,g,0.01, np.array([-100,50]), 0.00001)
-##print g(np.array([3,3])), num_gradient(f,np.array([3,3]),0.000001);
+##print g(np.array([3,3])), num_gradient(f,np.array([3,3]),0.01);
 
 
 ###Multi minima
@@ -43,9 +61,34 @@ def num_gradient(f,x,step):
 ##print decent(f,g,0.01, -1.5, 0.00001)
 ##print decent(f,g,0.01, 2, 0.00001)
 ##print decent(f,g,0.01, -3, 0.00001)
-###print decent(f,g,0.01, -100, 0.00001) #crashes because unstable
-##print decent(f,g,0.0001, -10, 0.00001)
+##print decent(f,g,0.01, -100, 0.00001) #crashes because unstable
+#print decent(f,g,0.0001, -10, 0.00001)
 ##print g(np.array(-9)), num_gradient(f,np.array([-9]),0.01);
+
+##f = lambda x: x**2;
+##g = lambda x: 2*x;
+##
+##res = minimize(f,5, method='Nelder-Mead');
+##x,it = decent_i(f,g,0.01,5,0.00001);
+##print res.x, res.nit
+##print x,it
+##
+##res = minimize(f,100, method='Nelder-Mead');
+##x,it = decent_i(f,g,0.01,100,0.00001);
+##print res.x, res.nit
+##print x,it
+##
+##
+##res = minimize(f,100, method='Nelder-Mead');
+##x,it = decent_i(f,g,0.01,100,0.01);
+##print res.x, res.nit
+##print x,it
+##
+##res = minimize(f,100, method='Nelder-Mead');
+##x,it = decent_i(f,g,0.1,100,0.00001);
+##print res.x, res.nit
+##print x,it
+
 
 
 '''
