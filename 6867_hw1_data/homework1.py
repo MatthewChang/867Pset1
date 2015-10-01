@@ -14,7 +14,7 @@ def designMatrix(X,order):
     return np.matrix([ [x**r for r in range(0,order+1)]  for x in Z]);
 
 def SSE(X,Y,order,w):
-    return np.linalg.norm((Y-designMatrix(X,order)*w),2)**2;
+    return 0.5*np.linalg.norm((Y-designMatrix(X,order)*w),2)**2;
 
 def SSEDer(X,Y,order,w):
     s = [0]*(order+1);
@@ -124,7 +124,7 @@ def regressValidateData():
 
 def regressTestData():
     return getData('regress_test.txt')
-
+'''
 def regressBlogTestData():
     return (genfromtxt('BlogFeedback_data/x_test.csv'), genfromtxt('BlogFeedback_data/y_test.csv'))
 
@@ -133,6 +133,15 @@ def regressBlogValData():
 
 def regressBlogTrainData():
     return (genfromtxt('BlogFeedback_data/x_train.csv'), genfromtxt('BlogFeedback_data/y_train.csv'))
+'''
+def regressBlogTestData():
+    return (np.loadtxt(open("BlogFeedback_data/x_test.csv","rb"),delimiter=",",skiprows=1), genfromtxt('BlogFeedback_data/y_test.csv'))
+
+def regressBlogValData():
+    return (np.loadtxt(open("BlogFeedback_data/x_val.csv","rb"),delimiter=",",skiprows=1), genfromtxt('BlogFeedback_data/y_val.csv'))
+
+def regressBlogTrainData():
+    return (np.loadtxt(open("BlogFeedback_data/x_train.csv","rb"),delimiter=",",skiprows=1), genfromtxt('BlogFeedback_data/y_train.csv'))
 
 X , Y = bishopCurveData();
 ##regressionPlot(X,Y,0);
@@ -141,16 +150,16 @@ X , Y = bishopCurveData();
 ##regressionPlot(X,Y,9);
 ##pl.show()
 
-regressionPlotDescent(X,Y,0,np.matrix([1]*1).T);
-regressionPlotDescent(X,Y,1,np.matrix([1]*2).T);
-regressionPlotDescent(X,Y,3,np.matrix([0]*4).T);
-regressionPlotDescent(X,Y,9,np.matrix([1]*10).T);
+#regressionPlotDescent(X,Y,0,np.matrix([1]*1).T);
+#regressionPlotDescent(X,Y,1,np.matrix([1]*2).T);
+#regressionPlotDescent(X,Y,3,np.matrix([0]*4).T);
+#regressionPlotDescent(X,Y,9,np.matrix([1]*10).T);
 
 ##regressionPlotDescentBuiltin(X,Y,0,np.matrix([1]*1).T);
 ##regressionPlotDescentBuiltin(X,Y,1,np.matrix([1]*2).T);
 ##regressionPlotDescentBuiltin(X,Y,3,np.matrix([0]*4).T);
 ##regressionPlotDescentBuiltin(X,Y,9,np.matrix([1]*10).T);
-pl.show();
+#pl.show();
 
 
 ##order = 1;
