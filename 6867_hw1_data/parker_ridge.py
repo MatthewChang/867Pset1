@@ -195,7 +195,7 @@ def LADError(X,Y,order,w,l):
 
 # plot LAD curves
 
-#X,Y = bishopCurveData()
+
 def findOptimumPair(X_train, Y_train, X_val, Y_val, order_list, lambda_list):
     min_error = float("inf")
     min_order = None
@@ -218,18 +218,31 @@ def findOptimumPair(X_train, Y_train, X_val, Y_val, order_list, lambda_list):
                 
 #min_error, min_order, min_lambda, error_all = findOptimumPair(X_train, Y_train, X_val, Y_val, range(10),[0.01, 0.1, 0.5, 1])
 
-order = 10;
-l = 0.1
-f = lambda w: LADError(X_train,Y_train,order,np.matrix(w).T,l);
+X,Y = bishopCurveData()
+
+plt.scatter(X,Y, c=[[0,0.8,0.8]])
+
+x = np.asmatrix(np.linspace(0,1,100)).T
+y = np.sin(2*np.pi*x)
+plt.plot(x,y,'r')
+
+order = 9;
+l = 1
+f = lambda w: LADError(X,Y,order,np.matrix(w).T,l);
 w = fmin_bfgs(f,[1]*(order+1))
-
-plt.scatter(X_val,Y_val, c=[[0,0.8,0.8]])
-
-x = np.asmatrix(np.linspace(-2.6,2,100)).T
-#y = np.sin(2*np.pi*x)
-#plt.plot(x,y,'r')
-
 plt.plot(x,designMatrix(x,order)*(np.matrix(w).T),'k')
+
+order = 3;
+l = 1
+f = lambda w: LADError(X,Y,order,np.matrix(w).T,l);
+w = fmin_bfgs(f,[1]*(order+1))
+plt.plot(x,designMatrix(x,order)*(np.matrix(w).T),'b')
+
+order = 1;
+l = 1
+f = lambda w: LADError(X,Y,order,np.matrix(w).T,l);
+w = fmin_bfgs(f,[1]*(order+1))
+plt.plot(x,designMatrix(x,order)*(np.matrix(w).T),'m')
 
 plt.xlabel('X')
 plt.ylabel('Y')
